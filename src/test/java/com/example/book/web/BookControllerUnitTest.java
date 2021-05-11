@@ -11,7 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -90,4 +93,46 @@ public class BookControllerUnitTest {
                 .andExpect(jsonPath("$.title").value("자바공부하기"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    public void update_test() throws Exception{
+        Long id = 1L;
+        Book book = new Book(null,"C++따라하기","홍길동");
+        String content =  new ObjectMapper().writeValueAsString(book);
+
+        when(bookService.Update(id,book)).thenReturn(new Book(1L,"자바공부하기","홍길동"));
+
+        ResultActions resultActions = mockMvc.perform(put("/book/{id}",id)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .content(content));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("C++따라하기"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+    @Test
+    public void delete_test() throws Exception{
+
+        Long id = 1L;
+
+
+        when(bookService.Delete(id)).thenReturn("OK");
+
+        ResultActions resultActions = mockMvc.perform(delete("/book/{id}",id)
+        .accept(MediaType.TEXT_PLAIN));
+
+
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+
+        MvcResult mvcResult = resultActions.andReturn();
+        String result = mvcResult.getResponse().getContentAsString();
+
+        assertEquals("OK",result);
+
+    }
+
 }
