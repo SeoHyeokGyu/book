@@ -26,7 +26,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<Book> LoadAll(Long id, Book book){
+    public List<Book> LoadAll(){
         return bookRepository.findAll();
     }
 
