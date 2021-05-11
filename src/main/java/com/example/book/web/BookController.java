@@ -19,9 +19,9 @@ public class BookController {
         return new ResponseEntity<>(bookService.LoadAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/book")
-    public ResponseEntity<?> save(Book book){
-        return new ResponseEntity<>(bookService.Save(book), HttpStatus.OK);
+    @PostMapping ("/book")
+    public ResponseEntity<?> save(@RequestBody Book book){
+        return new ResponseEntity<>(bookService.Save(book), HttpStatus.CREATED);
     }
 
     @GetMapping("/book/{id}")
@@ -35,7 +35,7 @@ public class BookController {
     }
 
     @DeleteMapping("/book/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id, @RequestBody Book book){
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
         return new ResponseEntity<>(bookService.Delete(id), HttpStatus.OK);
     }
 }
